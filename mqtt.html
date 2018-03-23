@@ -1,0 +1,120 @@
+<!--
+ NodeRED Mongoose OS MQTT
+ Copyright (C) 2018 Michael Jacobsen.
+
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<script type="text/x-red" data-template-name="mos-mqtt-client">
+    <div class="form-row">
+        <label for="node-config-input-broker"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.broker"></span></label>
+        <input type="text" id="node-config-input-broker">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-devicename"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.devicename"></span></label>
+        <input type="text" id="node-config-input-devicename" data-i18n="[placeholder]mos-mqtt.placeholder.devicename">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-domain"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.domain"></span></label>
+        <input type="text" id="node-input-domain" data-i18n="[placeholder]mos-mqtt.label.domain">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
+        <input type="text" id="node-config-input-name" data-i18n="[placeholder]mos-mqtt.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="most-mqtt-client">
+    <p>Mongoose OS MQTT Client<p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mos-mqtt-client', {
+        category: 'config',
+        defaults: {
+            broker: {
+                type:"mqtt-broker", 
+                required:true
+            },
+            devicename: {
+                value:"", 
+                required:true
+            },
+            domain: {
+                value:"domain", 
+                required:true
+            },
+            name: {
+                value:""
+            }
+        },
+        color:"#a6bbcf",
+        icon: "bridge.png",
+        label: function() {
+            return this.devicename || "mos_mqtt_client";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : ""
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mos-mqtt">
+    <div class="form-row">
+        <label for="node-input-client"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.broker"></span></label>
+        <input type="text" id="node-input-client">
+    </div>
+    <div class="form-row">
+        <label for="node-input-service"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.devicename"></span></label>
+        <input type="text" id="node-input-service" data-i18n="[placeholder]mos-mqtt.placeholder.devicename">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]mos-mqtt.label.name">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mos-mqtt">
+    <p>Mongoose OS MQTT<p>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mos-mqtt', {
+        category: 'mos_mqtt-function',
+        paletteLabel: 'MQTT',
+        defaults: {
+            broker: {
+                type:"mos-mqtt-client", 
+                required:true
+            },
+            service: {
+                value:"", 
+                required:true
+            },
+            name: {
+                value:""
+            }
+        },
+        inputs: 1,
+        outputs: 1,
+        color:"#a6bbcf",
+        icon: "bridge.png",
+        label: function() {
+            return this.name || "mos_mqtt";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : ""
+        }
+    });
+</script>

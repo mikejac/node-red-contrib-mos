@@ -1,0 +1,40 @@
+{
+  "name": "node-red-contrib-mos",
+  "version": "0.0.1",
+  "description": "Node-RED Mongoose OS RPC",
+  "main": "mqtt.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mikejac/node-red-contrib-mos.git"
+  },
+  "keywords": [
+    "mos",
+    "mongoose os",
+    "mqtt",
+    "iot"
+  ],
+  "node-red": {
+    "nodes": {
+      "mqtt": "mqtt.js"
+    }
+  },
+  "author": {
+    "name": "Michael Jacobsen"
+  },
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/mikejac/node-red-contrib-mos/issues"
+  },
+  "homepage": "https://github.com/mikejac/node-red-contrib-mos#readme",
+  "dependencies": {
+    "is-utf8": ">=0.2.1",
+    "mqtt": ">=1.14.1"
+  },
+  "maintainers": [
+    {
+      "name": "mikejac",
+      "email": "michael@visbyjacobsen.dk"
+    }
+  ]
+  }
