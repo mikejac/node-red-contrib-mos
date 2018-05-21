@@ -5,12 +5,21 @@
             "name": "Name",
             "broker": "MQTT Server",
             "devicename": "Devicename",
-            "domain": "Domain"
+            "domain": "Domain",
+            "bus": "Bus",
+            "version": "Version",
+            "broadcast": "Broadcast",
+            "mqtt_device": "MQTT Device",
+            "service": "Service Name"
         },
         "placeholder": {
             "name": "Name",
             "devicename": "Mongoose OS Device Name",
-            "domain": "(Unused)"
+            "domain": "domain",
+            "bus": "msgbus",
+            "version": "v2",
+            "broadcast": "broadcast",
+            "service": "Name"
         },
         "state": {
             "connected": "Connected to broker: __broker__",

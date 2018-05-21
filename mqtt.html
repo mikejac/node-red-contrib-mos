@@ -27,7 +27,19 @@
     </div>
     <div class="form-row">
         <label for="node-config-input-domain"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.domain"></span></label>
-        <input type="text" id="node-input-domain" data-i18n="[placeholder]mos-mqtt.label.domain">
+        <input type="text" id="node-config-input-domain" data-i18n="[placeholder]mos-mqtt.label.domain">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-bus"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.bus"></span></label>
+        <input type="text" id="node-config-input-bus" data-i18n="[placeholder]mos-mqtt.label.bus">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-version"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.version"></span></label>
+        <input type="text" id="node-config-input-version" data-i18n="[placeholder]mos-mqtt.label.version">
+    </div>
+    <div class="form-row">
+        <label for="node-config-input-broadcast"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.broadcast"></span></label>
+        <input type="text" id="node-config-input-broadcast" data-i18n="[placeholder]mos-mqtt.label.broadcast">
     </div>
     <div class="form-row">
         <label for="node-config-input-name"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
@@ -55,6 +67,18 @@
                 value:"domain", 
                 required:true
             },
+            bus: {
+                value:"msgbus", 
+                required:true
+            },
+            version: {
+                value:"v2", 
+                required:true
+            },
+            broadcast: {
+                value:"broadcast", 
+                required:true                
+            },
             name: {
                 value:""
             }
@@ -72,12 +96,12 @@
 
 <script type="text/x-red" data-template-name="mos-mqtt">
     <div class="form-row">
-        <label for="node-input-client"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.broker"></span></label>
+        <label for="node-input-client"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.mqtt_device"></span></label>
         <input type="text" id="node-input-client">
     </div>
     <div class="form-row">
-        <label for="node-input-service"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.devicename"></span></label>
-        <input type="text" id="node-input-service" data-i18n="[placeholder]mos-mqtt.placeholder.devicename">
+        <label for="node-input-service"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.service"></span></label>
+        <input type="text" id="node-input-service" data-i18n="[placeholder]mos-mqtt.placeholder.service">
     </div>
     <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
@@ -86,7 +110,8 @@
 </script>
 
 <script type="text/x-red" data-help-name="mos-mqtt">
-    <p>Mongoose OS MQTT<p>
+    Output 1 sends the succesfull response from device<br>
+    Output 2 sends error response from the device
 </script>
 
 <script type="text/javascript">
@@ -94,7 +119,7 @@
         category: 'mos_mqtt-function',
         paletteLabel: 'MQTT',
         defaults: {
-            broker: {
+            client: {
                 type:"mos-mqtt-client", 
                 required:true
             },
@@ -107,7 +132,7 @@
             }
         },
         inputs: 1,
-        outputs: 1,
+        outputs: 2,
         color:"#a6bbcf",
         icon: "bridge.png",
         label: function() {
