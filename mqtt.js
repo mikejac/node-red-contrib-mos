@@ -16,8 +16,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  **/
 
+
 module.exports = function(RED) {
     "use strict";
+
+    const dict      = require("dict");
 
     const mosRPC    = "rpc";
     const mosWrite  = "Write";
@@ -54,6 +57,7 @@ module.exports = function(RED) {
         this.version    = config.version;
         this.broadcast  = config.broadcast;
         this.devicename = config.devicename;
+        this.timeout    = 10000;
         this.qos        = 0;
         this.retain     = false;
         this.broker     = config.broker;
@@ -87,6 +91,10 @@ module.exports = function(RED) {
 
             return node.brokerConn.connected;
         };
+
+        this.getTimeout = function() {
+            return node.timeout;
+        };
         
         /******************************************************************************************************************
          * notifications coming from Node-RED
@@ -117,6 +125,8 @@ module.exports = function(RED) {
         this.mydevicename   = this.id.replace('.', '_');
         this.clientConn     = RED.nodes.getNode(this.client);
         this.rpcCount       = 1;
+        this.timerHandle    = null;
+        this.queue          = dict();
 
         if (!this.clientConn) {
             this.error(RED._("mos-mqtt.errors.missing-config"));
@@ -145,6 +155,66 @@ module.exports = function(RED) {
             node.emit('input', msg);
         }, 100);
 
+        /******************************************************************************************************************
+         * functions
+         *
+         */
+        this.disableTimer = function() {
+            var self = this;  
+          
+            if (self.timerHandle) {    
+                clearInterval(self.timerHandle);
+                self.timerHandle = null;    
+            }
+        }
+          
+        this.enableTimer = function() {
+            var self = this;
+            
+            if (self.timerHandle == null) {
+                self.timerHandle = setInterval(self.timerProc.bind(this), 1000);
+            }
+        }
+          
+        this.timerProc = function() {
+            var self = this; 
+          
+            //self._debug("Timer event. Queue size: " + self._queue.size);
+            
+            if (self.queue.size == 0) {
+                self.disableTimer();
+                return;
+            };
+          
+            self.queue.forEach(function (value, k) {
+                if (self.clientConn.connected() == false) {
+                    // The transport is inactive. Cancel pending requests
+                    /*let error = {
+                    "code": 503,
+                    "message": "The transport is not active."
+                    };
+                    
+                    process.nextTick(value.callback.bind(this), error, null);*/
+                    
+                    self.queue.delete(k);
+                } else if ((new Date()).getTime() - value.datetime >= self.clientConn.getTimeout()) {
+                    // discard requests that had timed out
+                    //process.nextTick(value.callback.bind(this), error, null);
+                    var err = {
+                        topic:    'error',
+                        payload:  "request timed out"
+                    }
+                    
+                    process.nextTick(self.send(null, err));
+                    self.queue.delete(k);
+                }
+            }); 
+             
+            if (self.queue.size == 0) {
+                self.disableTimer();
+            }
+        }
+          
         /******************************************************************************************************************
          * subscribe to RPC replies
          *
@@ -250,6 +320,12 @@ module.exports = function(RED) {
                 args: msg.payload
             };
 
+            node.queue.set(obj.id.toString(), {
+                datetime: (new Date()).getTime(),
+                payload: obj //,
+                //callback: callback
+            });
+
             //RED.log.debug("MosMqttNode(input): obj = " + JSON.stringify(obj));
 
             //
@@ -264,7 +340,9 @@ module.exports = function(RED) {
         
             //RED.log.debug("MosMqttNode(input): newMsg = " + JSON.stringify(newMsg))
 
-            node.clientConn.brokerConn.publish(newMsg)
+            node.clientConn.brokerConn.publish(newMsg);
+
+            node.enableTimer();
         });
 
         this.on('close', function(removed, done) {
