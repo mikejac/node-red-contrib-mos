@@ -10,7 +10,13 @@
             "version": "Version",
             "broadcast": "Broadcast",
             "mqtt_device": "MQTT Device",
-            "service": "Service Name"
+            "service": "Service Name",
+            "initialread": "Initial Read",
+            "watchdog": "Watchdog timeout",
+            "status": "Send online/offline transitions",
+            "info": "Send Info messages from device",
+            "sysinfo": "Send SysInfo messages from device",
+            "setting": "Send setting changes"
         },
         "placeholder": {
             "name": "Name",
@@ -19,12 +25,15 @@
             "bus": "msgbus",
             "version": "v2",
             "broadcast": "broadcast",
-            "service": "Name"
+            "service": "Name",
+            "watchdog": "Timeout in seconds. 0 = disabled"
         },
         "state": {
             "connected": "Connected to broker: __broker__",
             "disconnected": "Disconnected from broker: __broker__",
-            "connect-failed": "Connection failed to broker: __broker__"
+            "connect-failed": "Connection failed to broker: __broker__",
+            "online": "online",
+            "offline": "offline"
         },
         "errors": {
             "missing-config": "Missing broker configuration",

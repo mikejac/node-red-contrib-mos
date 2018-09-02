@@ -94,7 +94,7 @@
     });
 </script>
 
-<script type="text/x-red" data-template-name="mos-mqtt">
+<script type="text/x-red" data-template-name="mos-mqtt-rpc">
     <div class="form-row">
         <label for="node-input-client"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.mqtt_device"></span></label>
         <input type="text" id="node-input-client">
@@ -104,20 +104,24 @@
         <input type="text" id="node-input-service" data-i18n="[placeholder]mos-mqtt.placeholder.service">
     </div>
     <div class="form-row">
+        <label for="node-input-initialread" style="width: auto"><i class="fa fa-cog"></i> <span data-i18n="mos-mqtt.label.initialread"></span></label>
+        <input type="checkbox" id="node-input-initialread" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+    <div class="form-row">
         <label for="node-input-name"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
         <input type="text" id="node-input-name" data-i18n="[placeholder]mos-mqtt.label.name">
     </div>
 </script>
 
-<script type="text/x-red" data-help-name="mos-mqtt">
-    Output 1 sends the succesfull response from device<br>
-    Output 2 sends error response from the device
+<script type="text/x-red" data-help-name="mos-mqtt-rpc">
+    Output 1 sends the succesfull response from device.<br>
+    Output 2 sends error response from the device.<br>
 </script>
 
 <script type="text/javascript">
-    RED.nodes.registerType('mos-mqtt', {
+    RED.nodes.registerType('mos-mqtt-rpc', {
         category: 'mos_mqtt-function',
-        paletteLabel: 'MQTT',
+        paletteLabel: 'rpc',
         defaults: {
             client: {
                 type:"mos-mqtt-client", 
@@ -126,6 +130,9 @@
             service: {
                 value:"", 
                 required:true
+            },
+            initialread: {
+                value: true
             },
             name: {
                 value:""
@@ -136,7 +143,91 @@
         color:"#a6bbcf",
         icon: "bridge.png",
         label: function() {
-            return this.name || "mos_mqtt";
+            return this.name || "mos_mqtt_rpc";
+        },
+        labelStyle: function() {
+            return this.name ? "node_label_italic" : ""
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="mos-mqtt-system">
+    <div class="form-row">
+        <label for="node-input-client" style="width: 180px"><i class="fa fa-globe"></i> <span data-i18n="mos-mqtt.label.mqtt_device"></span></label>
+        <input type="text" id="node-input-client">
+    </div>
+    <div class="form-row">
+        <label for="node-input-wdt" style="width: 180px"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.watchdog"></span></label>
+        <input type="text" id="node-input-wdt" data-i18n="[placeholder]mos-mqtt.placeholder.watchdog">
+    </div>
+    <div class="form-row">
+        <label for="node-input-name" style="width: 180px"><i class="fa fa-tag"></i> <span data-i18n="mos-mqtt.label.name"></span></label>
+        <input type="text" id="node-input-name" data-i18n="[placeholder]mos-mqtt.label.name">
+    </div>
+    <div class="form-row">
+        <b>Logs</b>
+    </div>
+    <div class="form-row">
+        <label for="node-input-status" style="width: 250px"><i class="fa fa-cog"></i> <span data-i18n="mos-mqtt.label.status"></span></label>
+        <input type="checkbox" id="node-input-status" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-info" style="width: 250px"><i class="fa fa-cog"></i> <span data-i18n="mos-mqtt.label.info"></span></label>
+        <input type="checkbox" id="node-input-info" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-sysinfo" style="width: 250px"><i class="fa fa-cog"></i> <span data-i18n="mos-mqtt.label.sysinfo"></span></label>
+        <input type="checkbox" id="node-input-sysinfo" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+    <div class="form-row">
+        <label for="node-input-setting" style="width: 250px"><i class="fa fa-cog"></i> <span data-i18n="mos-mqtt.label.setting"></span></label>
+        <input type="checkbox" id="node-input-setting" style="display: inline-block; width: auto; vertical-align: top;">
+    </div>
+</script>
+
+<script type="text/x-red" data-help-name="mos-mqtt-system">
+    Output 1 sends the succesfull response from device.<br>
+    Output 2 sends errors.<br>
+    Output 3 sends device online/offline transistions.<br>
+    Output 4 sends logs.<br>
+</script>
+
+<script type="text/javascript">
+    RED.nodes.registerType('mos-mqtt-system', {
+        category: 'mos_mqtt-function',
+        paletteLabel: 'system',
+        defaults: {
+            client: {
+                type:"mos-mqtt-client", 
+                required:true
+            },
+            wdt: {
+                value: 60,
+                required: true,
+                validate:RED.validators.number()
+            },
+            name: {
+                value:""
+            },
+            status: {
+                value: true
+            },
+            info: {
+                value: true
+            },
+            sysinfo: {
+                value: false
+            },
+            setting: {
+                value: true
+            }
+        },
+        inputs: 1,
+        outputs: 4,
+        color:"#a6bbcf",
+        icon: "bridge.png",
+        label: function() {
+            return this.name || "mos mqtt system";
         },
         labelStyle: function() {
             return this.name ? "node_label_italic" : ""
